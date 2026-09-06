@@ -23,53 +23,64 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 15px;
+            padding: 0;
         }
 
-        /* Container Handphone Frame */
+        /* Container Mode Handphone Fleksibel & Bersih dari Garis Hitam */
         .mobile-container {
             width: 100%;
-            max-width: 390px;
+            height: 100vh;
+            max-width: 420px;
+            max-height: 100vh;
             background: #ffffff;
-            border-radius: 36px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
             position: relative;
-            border: 8px solid #1f2937;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header Kecil dengan Gradasi Ungu, Putih, Orange */
+        /* Ketika dibuka di Layar Lebar/PC, buat menyerupai frame handphone tanpa garis tepi hitam */
+        @media (min-width: 480px) {
+            .mobile-container {
+                height: 85vh;
+                border-radius: 30px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            }
+        }
+
+        /* Header Kecil & Ringkas */
         .header-bg {
             background: linear-gradient(135deg, #6d28d9 0%, #fdf2f8 50%, #ea580c 100%);
-            padding: 24px 15px 22px 15px;
+            padding: 16px 15px 14px 15px;
             text-align: center;
             color: #1f2937;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
             position: relative;
-            box-shadow: 0 4px 15px rgba(109, 40, 217, 0.1);
+            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.08);
         }
 
         .header-bg h2 {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             letter-spacing: 1px;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             text-transform: uppercase;
             color: #4c1d95;
         }
 
         .header-bg h1 {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             letter-spacing: 0.3px;
         }
 
         .header-bg p {
-            font-size: 10px;
+            font-size: 9px;
             color: #ffffff;
             font-weight: 500;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -79,21 +90,25 @@
         /* Ornamen Halus di Header */
         .header-ornament {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
-            top: -15px;
-            right: -15px;
+            top: -10px;
+            right: -10px;
         }
 
         /* Konten Menu Utama */
         .content-body {
-            padding: 22px 18px 28px 18px;
+            padding: 20px 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .menu-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             color: #9ca3af;
             margin-bottom: 12px;
@@ -113,7 +128,7 @@
             flex: 1;
             background: #ffffff;
             border: 1px solid #f3f4f6;
-            border-radius: 20px;
+            border-radius: 18px;
             padding: 16px 10px;
             display: flex;
             flex-direction: column;
@@ -122,39 +137,37 @@
             text-decoration: none;
             color: #1f2937;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
             position: relative;
         }
 
-        .menu-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(109, 40, 217, 0.12);
-            border-color: #ddd6fe;
+        .menu-card:active {
+            transform: scale(0.97);
         }
 
         /* Icon Mewah dengan Soft Gradient */
         .menu-icon {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 17px;
+            font-size: 15px;
             margin-bottom: 10px;
-            box-shadow: 0 6px 15px rgba(124, 58, 237, 0.25);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
         }
 
-        /* Supervisor Icon dengan Nuansa Soft Orange/Emerald */
+        /* Supervisor Icon dengan Nuansa Soft Orange */
         .menu-card.supervisor .menu-icon {
             background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
-            box-shadow: 0 6px 15px rgba(234, 88, 12, 0.25);
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
         }
 
         .menu-info h3 {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #111827;
             margin-bottom: 8px;
@@ -170,33 +183,27 @@
         }
 
         .ae-badge {
-            font-size: 9px;
+            font-size: 8.5px;
             font-weight: 600;
             padding: 4px 6px;
             background: #faf5ff;
             color: #6b21a8;
             border: 1px solid #f3e8ff;
-            border-radius: 8px;
+            border-radius: 7px;
             letter-spacing: 0.3px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            transition: all 0.2s;
+            gap: 4px;
         }
 
         .ae-badge i {
-            font-size: 9px;
+            font-size: 8.5px;
         }
 
-        /* Warna Ikon Badge yang Lembut & Harmonis */
         .ae-badge.ojt i { color: #d97706; }
         .ae-badge.pro i { color: #2563eb; }
         .ae-badge.elite i { color: #7c3aed; }
-
-        .ae-badge:hover {
-            background: #f3e8ff;
-        }
 
         .spv-desc {
             font-size: 10px;
@@ -205,7 +212,7 @@
             line-height: 1.3;
             background: #fff7ed;
             padding: 6px 4px;
-            border-radius: 8px;
+            border-radius: 7px;
             border: 1px solid #ffedd5;
             width: 100%;
         }
@@ -218,32 +225,15 @@
         .footer-info {
             text-align: center;
             margin-top: 20px;
-            font-size: 10px;
+            font-size: 9.5px;
             color: #9ca3af;
             letter-spacing: 0.3px;
-        }
-
-        /* Indikator Poni Handphone */
-        .phone-notch {
-            width: 110px;
-            height: 18px;
-            background: #1f2937;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            z-index: 10;
         }
     </style>
 </head>
 <body>
 
     <div class="mobile-container">
-        <!-- Poni Layar HP -->
-        <div class="phone-notch"></div>
-
         <!-- Header Ringkas (Ungu - Putih - Orange) -->
         <div class="header-bg">
             <div class="header-ornament"></div>
@@ -254,41 +244,43 @@
 
         <!-- Body Content -->
         <div class="content-body">
-            <div class="menu-title">Menu Utama</div>
+            <div>
+                <div class="menu-title">PILIH SESUAI JABATAN</div>
 
-            <!-- Menu Kiri & Kanan -->
-            <div class="menu-grid">
-                <!-- Menu Kiri: Account Executive -->
-                <a href="#" class="menu-card" onclick="alert('Mengarahkan ke Dashboard Account Executive')">
-                    <div class="menu-icon">
-                        <i class="fa-solid fa-user-tie"></i>
-                    </div>
-                    <div class="menu-info">
-                        <h3>Account Executive</h3>
-                        <div class="badge-container">
-                            <span class="ae-badge ojt"><i class="fa-solid fa-seedling"></i> OJT</span>
-                            <span class="ae-badge pro"><i class="fa-solid fa-bolt"></i> AE PRO</span>
-                            <span class="ae-badge elite"><i class="fa-solid fa-crown"></i> AE ELITE</span>
+                <!-- Menu Kiri & Kanan -->
+                <div class="menu-grid">
+                    <!-- Menu Kiri: Account Executive -->
+                    <a href="https://systemsalesbandung.github.io/Scheme-Incentive-Bandung/" class="menu-card">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-user-tie"></i>
                         </div>
-                    </div>
-                </a>
+                        <div class="menu-info">
+                            <h3>Account Executive</h3>
+                            <div class="badge-container">
+                                <span class="ae-badge ojt"><i class="fa-solid fa-seedling"></i> OJT</span>
+                                <span class="ae-badge pro"><i class="fa-solid fa-bolt"></i> AE PRO</span>
+                                <span class="ae-badge elite"><i class="fa-solid fa-crown"></i> AE ELITE</span>
+                            </div>
+                        </div>
+                    </a>
 
-                <!-- Menu Kanan: Supervisor -->
-                <a href="#" class="menu-card supervisor" onclick="alert('Mengarahkan ke Dashboard Supervisor')">
-                    <div class="menu-icon">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-                    <div class="menu-info">
-                        <h3>Supervisor</h3>
-                        <div class="spv-desc">
-                            <i class="fa-solid fa-chart-line"></i> Monitoring & Validasi
+                    <!-- Menu Kanan: Supervisor -->
+                    <a href="https://systemsalesbandung.github.io/schemaSPV/" class="menu-card supervisor">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-user-shield"></i>
                         </div>
-                    </div>
-                </a>
+                        <div class="menu-info">
+                            <h3>Supervisor</h3>
+                            <div class="spv-desc">
+                                <i class="fa-solid fa-chart-line"></i> 
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             <div class="footer-info">
-                <p>&copy; 2026 Jabar1 Management System</p>
+                <p>&copy; 2026 Jabar1 System Insentif Schema</p>
             </div>
         </div>
     </div>
