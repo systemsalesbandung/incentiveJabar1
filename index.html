@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Insentif Jabar1 - Mobile Mode</title>
+    
+    <!-- Konfigurasi PWA & Web App Manifest (Inline) -->
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Insentif Jabar1">
+    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/user-tie.svg">
+    
+    <script>
+        // Membuat Manifest secara dinamis agar bisa langsung diinstal di Chrome Handphone
+        const manifestData = {
+            "name": "Kalkulator Insentif Jabar1",
+            "short_name": "Insentif Jabar1",
+            "start_url": window.location.href,
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#ffffff",
+            "icons": [
+                {
+                    "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/calculator.svg",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml"
+                }
+            ]
+        };
+        const stringManifest = JSON.stringify(manifestData);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = manifestURL;
+        document.head.appendChild(manifestLink);
+    </script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
@@ -18,7 +52,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            background: linear-gradient(135deg, #fff7ed 0%, #fae8ff 50%, #eff6ff 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,74 +67,124 @@
             max-width: 420px;
             max-height: 100vh;
             background: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.08);
             overflow-y: auto;
             position: relative;
             display: flex;
             flex-direction: column;
         }
 
-        /* Ketika dibuka di Layar Lebar/PC, buat menyerupai frame handphone tanpa garis tepi hitam */
+        /* Ketika dibuka di Layar Lebar/PC, buat menyerupai frame handphone */
         @media (min-width: 480px) {
             .mobile-container {
                 height: 85vh;
                 border-radius: 30px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+                box-shadow: 0 25px 50px rgba(234, 88, 12, 0.12);
             }
         }
 
-        /* Header Kecil & Ringkas */
+        /* Header Bersih Warna Putih dengan Aksen Network High-End */
         .header-bg {
-            background: linear-gradient(135deg, #6d28d9 0%, #fdf2f8 50%, #ea580c 100%);
-            padding: 16px 15px 14px 15px;
+            background: #ffffff;
+            padding: 24px 18px 20px 18px;
             text-align: center;
-            color: #1f2937;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
             position: relative;
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        /* Garis Network / Elemen Dekoratif Mewah di Header */
+        .header-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, #ea580c, #3b82f6, #7c3aed, #ffffff);
+            border-radius: 3px;
         }
 
         .header-bg h2 {
             font-size: 9px;
             font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 1px;
+            letter-spacing: 1.5px;
+            margin-bottom: 2px;
             text-transform: uppercase;
-            color: #4c1d95;
+            background: linear-gradient(135deg, #ea580c, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header-bg h1 {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            margin-bottom: 1px;
+            color: #1f2937;
+            margin-bottom: 3px;
             letter-spacing: 0.3px;
         }
 
         .header-bg p {
-            font-size: 9px;
-            color: #ffffff;
+            font-size: 9.5px;
+            color: #6b7280;
             font-weight: 500;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            opacity: 0.95;
         }
 
-        /* Ornamen Halus di Header */
-        .header-ornament {
+        /* Ornamen Cerah & Elegan di Header */
+        .header-ornament-1 {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
             border-radius: 50%;
-            top: -10px;
-            right: -10px;
+            top: -20px;
+            right: -20px;
+        }
+
+        .header-ornament-2 {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            bottom: -10px;
+            left: -10px;
+        }
+
+        /* Tombol Install PWA yang Menarik */
+        #install-container {
+            padding: 0 16px;
+            margin-top: 14px;
+            display: none; /* Otomatis muncul jika memenuhi syarat browser */
+        }
+
+        .install-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 10.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .install-btn:active {
+            transform: scale(0.97);
         }
 
         /* Konten Menu Utama */
         .content-body {
-            padding: 20px 16px;
+            padding: 16px 16px 22px 16px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -108,62 +192,108 @@
         }
 
         .menu-title {
-            font-size: 10px;
+            font-size: 9.5px;
             font-weight: 600;
             color: #9ca3af;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
             text-align: center;
         }
 
-        /* Grid Layout Kiri & Kanan */
+        /* Grid Layout Kiri & Kanan (Sejajar Berdampingan) */
         .menu-grid {
             display: flex;
             gap: 12px;
         }
 
-        /* Kartu Menu Soft & Berkelas */
+        /* Kartu Menu High-End Soft Style */
         .menu-card {
             flex: 1;
             background: #ffffff;
             border: 1px solid #f3f4f6;
-            border-radius: 18px;
-            padding: 16px 10px;
+            border-radius: 20px;
+            padding: 18px 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             text-decoration: none;
             color: #1f2937;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
             position: relative;
+            overflow: hidden;
+        }
+
+        /* Efek Garis Network Halus di Atas Kartu */
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ea580c, #3b82f6);
+            opacity: 0.8;
+        }
+
+        .menu-card.supervisor::before {
+            background: linear-gradient(90deg, #7c3aed, #db2777);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.1);
+            border-color: #fed7aa;
+        }
+
+        .menu-card.supervisor:hover {
+            border-color: #e9d5ff;
         }
 
         .menu-card:active {
             transform: scale(0.97);
         }
 
-        /* Icon Mewah dengan Soft Gradient */
+        /* Icon Mewah dengan Gradasi Cerah */
         .menu-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+            font-size: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 15px rgba(234, 88, 12, 0.25);
+            position: relative;
         }
 
-        /* Supervisor Icon dengan Nuansa Soft Orange */
+        /* Supervisor Icon dengan Gradasi Ungu-Biru Mewah */
         .menu-card.supervisor .menu-icon {
-            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
-            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+            background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+            box-shadow: 0 6px 15px rgba(124, 58, 237, 0.25);
+        }
+
+        /* Badge Logo Kecil (Kunci) di Pojok Ikon Supervisor */
+        .lock-badge {
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            background: #ffffff;
+            color: #7c3aed;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border: 1px solid #e9d5ff;
         }
 
         .menu-info h3 {
@@ -171,10 +301,10 @@
             font-weight: 700;
             color: #111827;
             margin-bottom: 8px;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
-        /* Badge OJT, AE PRO, AE ELITE Bergaya Soft */
+        /* Badge OJT, PRO, ELITE Bergaya Modern */
         .badge-container {
             display: flex;
             flex-direction: column;
@@ -183,42 +313,44 @@
         }
 
         .ae-badge {
-            font-size: 8.5px;
+            font-size: 8px;
             font-weight: 600;
-            padding: 4px 6px;
-            background: #faf5ff;
-            color: #6b21a8;
-            border: 1px solid #f3e8ff;
+            padding: 4px 4px;
+            background: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #ffedd5;
             border-radius: 7px;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 3px;
         }
 
         .ae-badge i {
-            font-size: 8.5px;
+            font-size: 7.5px;
         }
 
         .ae-badge.ojt i { color: #d97706; }
-        .ae-badge.pro i { color: #2563eb; }
-        .ae-badge.elite i { color: #7c3aed; }
+        .ae-badge.pro i { color: #ea580c; }
+        .ae-badge.elite i { color: #e11d48; }
 
         .spv-desc {
-            font-size: 10px;
-            color: #6b7280;
-            margin-top: 4px;
+            font-size: 9px;
+            color: #7c3aed;
+            margin-top: 2px;
             line-height: 1.3;
-            background: #fff7ed;
-            padding: 6px 4px;
+            background: #faf5ff;
+            padding: 8px 4px;
             border-radius: 7px;
-            border: 1px solid #ffedd5;
+            border: 1px solid #f3e8ff;
             width: 100%;
+            font-weight: 500;
         }
 
         .spv-desc i {
-            color: #ea580c;
+            color: #3b82f6;
+            margin-right: 2px;
         }
 
         /* Footer Info */
@@ -234,20 +366,28 @@
 <body>
 
     <div class="mobile-container">
-        <!-- Header Ringkas (Ungu - Putih - Orange) -->
+        <!-- Header Putih Bersih dengan Sentuhan Network High-End -->
         <div class="header-bg">
-            <div class="header-ornament"></div>
+            <div class="header-ornament-1"></div>
+            <div class="header-ornament-2"></div>
             <h2>Kalkulator Perhitungan</h2>
             <h1>Insentif Jabar1</h1>
-            <p>Pilih Akses Menu Anda</p>
+            <p>Pilih Akses Menu Sistem Anda</p>
+        </div>
+
+        <!-- Tombol Instal Aplikasi (Muncul Otomatis jika didukung Chrome Mobile) -->
+        <div id="install-container">
+            <button id="installBtn" class="install-btn">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Install Aplikasi ke HP
+            </button>
         </div>
 
         <!-- Body Content -->
         <div class="content-body">
             <div>
-                <div class="menu-title">PILIH SESUAI JABATAN</div>
+                <div class="menu-title" style="margin-top: 5px;">PILIH SESUAI JABATAN</div>
 
-                <!-- Menu Kiri & Kanan -->
+                <!-- Menu Kiri & Kanan (Sejajar Berdampingan) -->
                 <div class="menu-grid">
                     <!-- Menu Kiri: Account Executive -->
                     <a href="https://systemsalesbandung.github.io/Scheme-Incentive-Bandung/" class="menu-card">
@@ -258,21 +398,24 @@
                             <h3>Account Executive</h3>
                             <div class="badge-container">
                                 <span class="ae-badge ojt"><i class="fa-solid fa-seedling"></i> OJT</span>
-                                <span class="ae-badge pro"><i class="fa-solid fa-bolt"></i> AE PRO</span>
-                                <span class="ae-badge elite"><i class="fa-solid fa-crown"></i> AE ELITE</span>
+                                <span class="ae-badge pro"><i class="fa-solid fa-bolt"></i> PRO</span>
+                                <span class="ae-badge elite"><i class="fa-solid fa-crown"></i> ELITE</span>
                             </div>
                         </div>
                     </a>
 
-                    <!-- Menu Kanan: Supervisor -->
+                    <!-- Menu Kanan: Supervisor (Dengan Logo Kunci) -->
                     <a href="https://systemsalesbandung.github.io/schemaSPV/" class="menu-card supervisor">
                         <div class="menu-icon">
                             <i class="fa-solid fa-user-shield"></i>
+                            <div class="lock-badge">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
                         </div>
                         <div class="menu-info">
                             <h3>Supervisor</h3>
                             <div class="spv-desc">
-                                <i class="fa-solid fa-chart-line"></i> 
+                                <i class="fa-solid fa-chart-line"></i> Schema SPV Jabar 1
                             </div>
                         </div>
                     </a>
@@ -285,5 +428,43 @@
         </div>
     </div>
 
+    <!-- Script PWA untuk Menangani Tombol Install Android / Chrome -->
+    <script>
+        let deferredPrompt;
+        const installContainer = document.getElementById('install-container');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Mencegah Chrome menampilkan banner otomatis bawaan
+            e.preventDefault();
+            deferredPrompt = e;
+            // Tampilkan tombol instal kustom kita
+            installContainer.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('Pengguna menyetujui instalasi aplikasi');
+                }
+                deferredPrompt = null;
+                installContainer.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installContainer.style.display = 'none';
+            console.log('Aplikasi berhasil diinstal');
+        });
+
+        // Registrasi Service Worker Sederhana agar memenuhi syarat PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;base64,').catch(err => console.log(err));
+            });
+        }
+    </script>
 </body>
 </html>
