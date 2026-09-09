@@ -2,1255 +2,468 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JABAR1 Regional Executive Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Insentif Jabar1 - Mobile Mode</title>
+    
+    <!-- Konfigurasi PWA & Web App Manifest (Inline) -->
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Insentif Jabar1">
+    <link rel="apple-touch-icon" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/user-tie.svg">
+    
+    <script>
+        // Membuat Manifest secara dinamis agar bisa langsung diinstal di Chrome Handphone
+        const manifestData = {
+            "name": "Kalkulator Insentif Jabar1",
+            "short_name": "Insentif Jabar1",
+            "start_url": window.location.href,
+            "display": "standalone",
+            "background_color": "#ffffff",
+            "theme_color": "#ffffff",
+            "icons": [
+                {
+                    "src": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/svgs/solid/calculator.svg",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml"
+                }
+            ]
+        };
+        const stringManifest = JSON.stringify(manifestData);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = manifestURL;
+        document.head.appendChild(manifestLink);
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-            color: #1e293b;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff7ed 0%, #fae8ff 50%, #eff6ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
+            padding: 0;
         }
-        .bg-soft-gradient {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+
+        /* Container Mode Handphone Fleksibel & Bersih dari Garis Hitam */
+        .mobile-container {
+            width: 100%;
+            height: 100vh;
+            max-width: 420px;
+            max-height: 100vh;
+            background: #ffffff;
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.08);
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
-        .text-soft-gradient {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+
+        /* Ketika dibuka di Layar Lebar/PC, buat menyerupai frame handphone */
+        @media (min-width: 480px) {
+            .mobile-container {
+                height: 85vh;
+                border-radius: 30px;
+                box-shadow: 0 25px 50px rgba(234, 88, 12, 0.12);
+            }
+        }
+
+        /* Header Bersih Warna Putih dengan Aksen Network High-End */
+        .header-bg {
+            background: #ffffff;
+            padding: 24px 18px 20px 18px;
+            text-align: center;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+        }
+
+        /* Garis Network / Elemen Dekoratif Mewah di Header */
+        .header-bg::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, #ea580c, #3b82f6, #7c3aed, #ffffff);
+            border-radius: 3px;
+        }
+
+        .header-bg h2 {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ea580c, #7c3aed);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .glass-card-mobile {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+
+        .header-bg h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
         }
-        .glass-input {
-            background: rgba(248, 250, 252, 0.9);
-            border: 1px solid rgba(203, 213, 225, 0.8);
-            color: #0f172a;
+
+        .header-bg p {
+            font-size: 9.5px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Ornamen Cerah & Elegan di Header */
+        .header-ornament-1 {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(234, 88, 12, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            top: -20px;
+            right: -20px;
+        }
+
+        .header-ornament-2 {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            bottom: -10px;
+            left: -10px;
+        }
+
+        /* Tombol Install PWA yang Menarik */
+        #install-container {
+            padding: 0 16px;
+            margin-top: 14px;
+            display: none; /* Otomatis muncul jika memenuhi syarat browser */
+        }
+
+        .install-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 10.5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
             transition: all 0.3s ease;
         }
-        .glass-input:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
-            outline: none;
+
+        .install-btn:active {
+            transform: scale(0.97);
         }
-        .glow-orb-1 {
-            position: fixed;
-            top: -10%;
-            left: -20%;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(199, 210, 254, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-            pointer-events: none;
+
+        /* Konten Menu Utama */
+        .content-body {
+            padding: 16px 16px 22px 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .glow-orb-2 {
-            position: fixed;
-            bottom: 10%;
-            right: -20%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(243, 232, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
-            z-index: -1;
-            pointer-events: none;
+
+        .menu-title {
+            font-size: 9.5px;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
         }
-        .stabilo-green-cell {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.9)) !important;
-            color: #ffffff !important;
-            font-weight: 800 !important;
-            border: 1px solid #059669;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
-            animation: pulse-soft 2s infinite;
+
+        /* Grid Layout Kiri & Kanan (Sejajar Berdampingan) */
+        .menu-grid {
+            display: flex;
+            gap: 12px;
         }
-        .stabilo-green-cell td, .stabilo-green-cell span {
-            color: #ffffff !important;
+
+        /* Kartu Menu High-End Soft Style */
+        .menu-card {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #f3f4f6;
+            border-radius: 20px;
+            padding: 18px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: #1f2937;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes pulse-soft {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.95; transform: scale(0.99); }
-        }
-        .click-pulse {
-            animation: clickEffect 0.2s ease;
-        }
-        @keyframes clickEffect {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.96); }
-            100% { transform: scale(1); }
-        }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
+
+        /* Efek Garis Network Halus di Atas Kartu */
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 4px;
+            background: linear-gradient(90deg, #ea580c, #3b82f6);
+            opacity: 0.8;
         }
-        ::-webkit-scrollbar-track {
-            background: rgba(241, 245, 249, 0.5);
+
+        .menu-card.supervisor::before {
+            background: linear-gradient(90deg, #7c3aed, #db2777);
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 4px;
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.1);
+            border-color: #fed7aa;
+        }
+
+        .menu-card.supervisor:hover {
+            border-color: #e9d5ff;
+        }
+
+        .menu-card:active {
+            transform: scale(0.97);
+        }
+
+        /* Icon Mewah dengan Gradasi Cerah */
+        .menu-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 15px rgba(234, 88, 12, 0.25);
+            position: relative;
+        }
+
+        /* Supervisor Icon dengan Gradasi Ungu-Biru Mewah */
+        .menu-card.supervisor .menu-icon {
+            background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+            box-shadow: 0 6px 15px rgba(124, 58, 237, 0.25);
+        }
+
+        /* Badge Logo Kecil (Kunci) di Pojok Ikon Supervisor */
+        .lock-badge {
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            background: #ffffff;
+            color: #7c3aed;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border: 1px solid #e9d5ff;
+        }
+
+        .menu-info h3 {
+            font-size: 11px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            line-height: 1.25;
+        }
+
+        /* Badge OJT, PRO, ELITE Bergaya Modern */
+        .badge-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+        }
+
+        .ae-badge {
+            font-size: 8px;
+            font-weight: 600;
+            padding: 4px 4px;
+            background: #fff7ed;
+            color: #c2410c;
+            border: 1px solid #ffedd5;
+            border-radius: 7px;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .ae-badge i {
+            font-size: 7.5px;
+        }
+
+        .ae-badge.ojt i { color: #d97706; }
+        .ae-badge.pro i { color: #ea580c; }
+        .ae-badge.elite i { color: #e11d48; }
+
+        .spv-desc {
+            font-size: 9px;
+            color: #7c3aed;
+            margin-top: 2px;
+            line-height: 1.3;
+            background: #faf5ff;
+            padding: 8px 4px;
+            border-radius: 7px;
+            border: 1px solid #f3e8ff;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .spv-desc i {
+            color: #3b82f6;
+            margin-right: 2px;
+        }
+
+        /* Footer Info */
+        .footer-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 9.5px;
+            color: #9ca3af;
+            letter-spacing: 0.3px;
         }
     </style>
 </head>
-<body class="min-h-screen py-3 px-2 selection:bg-purple-500 selection:text-white text-xs">
+<body>
 
-    <div class="glow-orb-1"></div>
-    <div class="glow-orb-2"></div>
+    <div class="mobile-container">
+        <!-- Header Putih Bersih dengan Sentuhan Network High-End -->
+        <div class="header-bg">
+            <div class="header-ornament-1"></div>
+            <div class="header-ornament-2"></div>
+            <h2>Kalkulator Perhitungan</h2>
+            <h1>Insentif Jabar1</h1>
+            <p>Pilih Akses Menu Sistem Anda</p>
+        </div>
 
-    <div id="mainDashboard" class="w-full max-w-md mx-auto space-y-3.5 pb-12">
-        
-        <div class="glass-card-mobile rounded-2xl p-4 space-y-3 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-200/40 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-10 h-10 rounded-xl bg-soft-gradient flex items-center justify-center font-black text-xs shadow-md text-white shadow-purple-500/20">
-                        J1
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <h1 class="text-sm font-extrabold tracking-tight text-slate-800">
-                                JABAR1 Dashboard
-                            </h1>
-                            <span id="headerTierBadge" class="text-[9px] px-1.5 py-0.2 rounded bg-slate-200 text-slate-700 font-extrabold shadow-xs">PILIH KOTA</span>
+        <!-- Tombol Instal Aplikasi (Muncul Otomatis jika didukung Chrome Mobile) -->
+        <div id="install-container">
+            <button id="installBtn" class="install-btn">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Install Aplikasi ke HP
+            </button>
+        </div>
+
+        <!-- Body Content -->
+        <div class="content-body">
+            <div>
+                <div class="menu-title" style="margin-top: 5px;">PILIH SESUAI JABATAN</div>
+
+                <!-- Menu Kiri & Kanan (Sejajar Berdampingan) -->
+                <div class="menu-grid">
+                    <!-- Menu Kiri: Account Executive -->
+                    <a href="https://systemsalesbandung.github.io/Scheme-Incentive-Bandung/" class="menu-card">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-user-tie"></i>
                         </div>
-                        <p class="text-slate-500 text-[10px] font-medium">Kalkulator Insentif Berbasis Menu Tiering & Kota</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-full">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span class="text-[9px] text-emerald-700 font-bold uppercase tracking-wider">Live</span>
-                </div>
-            </div>
-
-            <div class="space-y-2 pt-1">
-                <div class="flex items-center justify-between">
-                    <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 block">Pilih Menu Tiering & Kota:</span>
-                    <span class="text-[10px] font-semibold text-purple-600 italic">Otomatis Update Gaji</span>
-                </div>
-                
-                <div class="relative flex items-center">
-                    <div id="cityIconContainer" class="absolute left-3 top-1/2 -translate-y-1/2 text-purple-600 z-10 pointer-events-none flex items-center justify-center">
-                        </div>
-                    <select id="citySelect" onchange="onCityDropdownChange(this.value)" class="w-full pl-9 pr-8 py-2.5 glass-input rounded-xl text-xs font-bold text-slate-800 appearance-none cursor-pointer shadow-xs">
-                        <option value="" disabled selected>-- Pilih Kota --</option>
-                        <optgroup label="Tiering 1">
-                            <option value="ciamis">📍 Tiering 1 - Ciamis</option>
-                            <option value="garut">📍 Tiering 1 - Garut</option>
-							 <option value="Tasik">📍 Tiering 1 - Tasik</option>
-                        </optgroup>
-                        <optgroup label="Tiering 2">
-                            <option value="sumedang">📍 Tiering 2 - Sumedang</option>
-                            <option value="cianjur">📍 Tiering 2 - Cianjur</option>
-                            <option value="sukabumi">📍 Tiering 2 - Sukabumi</option>
-                        </optgroup>
-                        <optgroup label="Tiering 3">
-                            <option value="bandung">📍 Tiering 3 - Bandung</option>
-                        </optgroup>
-                    </select>
-                    <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-
-                <div class="pt-1">
-                    <span class="text-[10px] uppercase tracking-wider font-extrabold text-slate-500 block mb-1.5">Pilih Tingkatan Jabatan:</span>
-                    <div class="grid grid-cols-3 gap-2">
-                        
-                        <button type="button" id="btnTierOjt" onclick="setTier('ojt')" class="relative py-2.5 px-2 rounded-xl transition-all border border-amber-200/60 bg-amber-50/50 text-slate-700 hover:bg-amber-100/50 flex flex-col items-center justify-center gap-1 shadow-xs group">
-                            <span id="checkOjt" class="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white items-center justify-center text-[9px] font-black hidden shadow-sm">✓</span>
-                            <div class="w-6 h-6 rounded-lg bg-amber-500/15 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 01-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.000 11.25H19.5"/></svg>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-[11px] font-extrabold text-amber-900 block leading-tight">OJT</span>
-                                <span class="text-[9px] text-amber-700/80 font-bold block mt-0.5" id="labelSalaryOjt">Rp 0</span>
-                            </div>
-                        </button>
-
-                        <button type="button" id="btnTierPro" onclick="setTier('pro')" class="relative py-2.5 px-2 rounded-xl transition-all border border-blue-200/60 bg-blue-50/50 text-slate-700 hover:bg-blue-100/50 flex flex-col items-center justify-center gap-1 shadow-xs group">
-                            <span id="checkPro" class="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white items-center justify-center text-[9px] font-black hidden shadow-sm">✓</span>
-                            <div class="w-6 h-6 rounded-lg bg-blue-500/15 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385c.103.426-.345.764-.71.534l-4.735-2.81a.563.563 0 00-.586 0L6.982 20.54c-.365.23-.813-.108-.71-.534l1.285-5.385a.563.563 0 00-.182-.557l-4.204-3.602c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-[11px] font-extrabold text-blue-900 block leading-tight">AE Pro</span>
-                                <span class="text-[9px] text-blue-700/80 font-bold block mt-0.5" id="labelSalaryPro">Rp 0</span>
-                            </div>
-                        </button>
-
-                        <button type="button" id="btnTierElite" onclick="setTier('elite')" class="relative py-2.5 px-2 rounded-xl transition-all border border-purple-200/60 bg-purple-50/50 text-slate-700 hover:bg-purple-100/50 flex flex-col items-center justify-center gap-1 shadow-xs group">
-                            <span id="checkElite" class="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white items-center justify-center text-[9px] font-black hidden shadow-sm">✓</span>
-                            <div class="w-6 h-6 rounded-lg bg-purple-500/15 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                            </div>
-                            <div class="text-center">
-                                <span class="text-[11px] font-extrabold text-purple-900 block leading-tight">AE Elite</span>
-                                <span class="text-[9px] text-purple-700/80 font-bold block mt-0.5" id="labelSalaryElite">UMK</span>
-                            </div>
-                        </button>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2">
-            <div class="glass-card-mobile rounded-2xl p-2.5 text-center active:scale-95 transition-transform border-l-2 border-l-purple-400" onclick="triggerPulse(this)">
-                <span class="text-[9px] uppercase font-extrabold tracking-wider text-purple-700 block truncate">Gaji Pokok</span>
-                <h3 class="text-xs font-black text-slate-800 mt-1 truncate" id="dashBaseSalary">Rp 0</h3>
-            </div>
-            <div class="glass-card-mobile rounded-2xl p-2.5 text-center active:scale-95 transition-transform border-l-2 border-l-indigo-400" onclick="triggerPulse(this)">
-                <span class="text-[9px] uppercase font-extrabold tracking-wider text-indigo-700 block truncate">Insentif</span>
-                <h3 class="text-xs font-black text-indigo-600 mt-1 truncate" id="dashTotalIncentive">Rp 0</h3>
-            </div>
-            <div class="glass-card-mobile rounded-2xl p-2.5 text-center active:scale-95 transition-transform bg-gradient-to-br from-emerald-50/80 to-teal-50/80 border border-emerald-500/20" onclick="triggerPulse(this)">
-                <span class="text-[9px] uppercase font-extrabold tracking-wider text-emerald-700 block truncate">THP Bersih</span>
-                <h3 class="text-xs font-black text-emerald-600 mt-1 truncate" id="dashGrandTotal">Rp 0</h3>
-            </div>
-        </div>
-
-        <div class="glass-card-mobile rounded-2xl p-3.5 space-y-2.5 border-t-2 border-t-indigo-400">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-indigo-500/15 flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.5 18h.01" /></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">FTTH Activation Incentive</h2>
-                </div>
-                <span class="text-[9px] bg-indigo-500/10 text-indigo-700 font-bold px-2 py-0.5 rounded-full border border-indigo-500/20">Fiber Optic</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-[10px] min-w-[360px]">
-                    <thead>
-                        <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                            <th class="py-2 px-2 rounded-l-lg">Paket FTTH</th>
-                            <th class="py-2 px-2">Ins/SA</th>
-                            <th class="py-2 px-2 w-14">SA</th>
-                            <th class="py-2 px-2 rounded-r-lg">Total Act</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ftthTableBody" class="divide-y divide-slate-100"></tbody>
-                    <tfoot>
-                        <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                            <td colspan="2" class="py-2 px-2 text-right">Subtotal FTTH:</td>
-                            <td class="py-2 px-2 text-indigo-600 font-black" id="ftthTotalSA">-</td>
-                            <td class="py-2 px-2 text-indigo-600 font-black" id="ftthTotalIncentive">Rp 0</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        <div class="glass-card-mobile rounded-2xl p-3.5 space-y-2.5 border-t-2 border-t-pink-400">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-pink-500/15 flex items-center justify-center text-pink-600 shadow-sm border border-pink-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.348 14.651a3.75 3.75 0 010-5.303m3.75 8.75a8.75 8.75 0 000-12.248m-7.5 15.75a13.75 13.75 0 010-19.25m15.5 13.5a3.75 3.75 0 000-5.303" /></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">FWA Monthly</h2>
-                </div>
-                <span class="text-[9px] bg-pink-500/10 text-pink-700 font-bold px-2 py-0.5 rounded-full border border-pink-500/20">Wireless</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-[10px] min-w-[360px]">
-                    <thead>
-                        <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                            <th class="py-2 px-2 rounded-l-lg">Paket FWA</th>
-                            <th class="py-2 px-2">FWA/SA</th>
-                            <th class="py-2 px-2 w-14">SA</th>
-                            <th class="py-2 px-2 rounded-r-lg">Tot FWA</th>
-                        </tr>
-                    </thead>
-                    <tbody id="fwaTableBody" class="divide-y divide-slate-100"></tbody>
-                    <tfoot>
-                        <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                            <td colspan="2" class="py-2 px-2 text-right">Subtotal FWA:</td>
-                            <td class="py-2 px-2 text-pink-600 font-black" id="fwaTotalSA">-</td>
-                            <td class="py-2 px-2 text-pink-600 font-black" id="fwaTotalIncentive">Rp 0</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        <div class="glass-card-mobile rounded-2xl p-3.5 space-y-2.5 border-t-2 border-t-purple-400">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-purple-500/15 flex items-center justify-center text-purple-600 shadow-sm border border-purple-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">Pay X Get Y (PXGY) – Tenure</h2>
-                </div>
-                <span class="text-[9px] bg-purple-500/10 text-purple-700 font-bold px-2 py-0.5 rounded-full border border-purple-500/20">Tenure Incentive</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-[10px] min-w-[380px]">
-                    <thead>
-                        <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                            <th class="py-2 px-2 rounded-l-lg">Tenure</th>
-                            <th class="py-2 px-2">Acq</th>
-                            <th class="py-2 px-2">Special</th>
-                            <th class="py-2 px-2 w-12">SA</th>
-                            <th class="py-2 px-2">Tot Acq</th>
-                            <th class="py-2 px-2 rounded-r-lg">Tot Spc</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pxgyTableBody" class="divide-y divide-slate-100"></tbody>
-                    <tfoot>
-                        <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                            <td colspan="3" class="py-2 px-2 text-right">Subtotal:</td>
-                            <td class="py-2 px-2 text-purple-600 font-black" id="pxgyTotalSA">-</td>
-                            <td class="py-2 px-2 text-purple-600 font-black" id="pxgyTotalAcqIncentive">Rp 0</td>
-                            <td class="py-2 px-2 text-purple-600 font-black rounded-r-lg" id="pxgyTotalSpecialIncentive">Rp 0</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        <div class="glass-card-mobile rounded-2xl p-3.5 space-y-3 border border-purple-200">
-            <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
-                <div class="w-5 h-5 rounded-md bg-purple-500/15 flex items-center justify-center text-purple-600 font-black text-[10px] border border-purple-500/20">2</div>
-                <h2 class="font-extrabold text-slate-800 text-xs" id="sec2Title">Productivity & Multiplier Tier</h2>
-            </div>
-
-            <div class="bg-gradient-to-r from-indigo-50/70 via-purple-50/70 to-pink-50/70 border border-purple-200 rounded-xl p-2.5 flex justify-between items-center text-[11px]">
-                <span class="text-slate-700 font-bold">Total Closing (FTTH + FWA + PXGY):</span>
-                <span class="font-black text-purple-700 text-xs" id="combinedTotalClosingSA">0 SA</span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-[10px] min-w-[360px]">
-                    <thead>
-                        <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                            <th class="py-2 px-2 rounded-l-lg">Productivity Tier</th>
-                            <th class="py-2 px-2">Ins/SA</th>
-                            <th class="py-2 px-2 w-12">SA</th>
-                            <th class="py-2 px-2">Tot Ins</th>
-                            <th class="py-2 px-2 rounded-r-lg" id="tableHeaderCol5">Multi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productivityTableBody" class="divide-y divide-slate-100"></tbody>
-                    <tfoot>
-                        <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                            <td colspan="2" class="py-2 px-2 text-right">Subtotal Prod:</td>
-                            <td class="py-2 px-2 text-purple-600 font-black" id="prodTotalSA">-</td>
-                            <td colspan="2" class="py-2 px-2 text-purple-600 font-black text-right" id="prodTotalInsentif">Rp 0</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <div id="ojtLumpSumNotice" class="hidden mt-2 p-3 rounded-xl bg-amber-50 border border-amber-200 space-y-2 shadow-xs">
-                <span class="font-extrabold text-amber-900 block text-[11px]">Informasi Bonus Tambahan OJT (Lump Sum):</span>
-                <div class="grid grid-cols-2 gap-2">
-                    <div id="lumpSumCard3" class="relative bg-white/90 p-2.5 rounded-lg border border-slate-200 text-center shadow-xs transition-all">
-                        <div id="checkLumpSum3" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-[11px] font-black hidden shadow-md animate-bounce">✓</div>
-                        <span class="text-[9px] font-bold text-slate-500 block uppercase tracking-wider">Minimal 3 Closing (SA)</span>
-                        <span class="text-xs font-black text-amber-600 block mt-0.5">Bonus Rp 325.000</span>
-                    </div>
-                    <div id="lumpSumCard7" class="relative bg-white/90 p-2.5 rounded-lg border border-slate-200 text-center shadow-xs transition-all">
-                        <div id="checkLumpSum7" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-[11px] font-black hidden shadow-md animate-bounce">✓</div>
-                        <span class="text-[9px] font-bold text-slate-500 block uppercase tracking-wider">Minimal 7 Closing (SA)</span>
-                        <span class="text-xs font-black text-pink-600 block mt-0.5">Bonus Rp 600.000</span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="proEliteNotice" class="hidden mt-2 p-3 rounded-xl bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-pink-500/10 border border-purple-200 space-y-2.5 shadow-sm">
-                <div class="flex items-center justify-between border-b border-purple-200 pb-1.5">
-                    <span class="font-black text-[11px] text-purple-900 flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-purple-600 animate-spin" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
-                        Pencapaian Multiplier & Exclusive Reward Pro
-                    </span>
-                    <span class="text-[9px] bg-purple-600 text-white font-extrabold px-2 py-0.5 rounded-full shadow-xs">PENTING</span>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <div id="multiplierBadgeCard" class="relative bg-white/90 p-2.5 rounded-xl border border-purple-200 text-center shadow-xs flex flex-col justify-center">
-                        <div id="checkMultiplierBadge" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-[11px] font-black hidden shadow-md animate-bounce">✓</div>
-                        <span class="text-[9px] font-bold text-slate-500 block uppercase tracking-wider">Tier Multiplier Aktif</span>
-                        <span class="text-xs font-black text-purple-700 block mt-0.5" id="multiplierTierNameText">-</span>
-                        <div class="mt-1.5 bg-indigo-50 rounded border border-indigo-100 px-1.5 py-0.5 inline-block mx-auto">
-                            <span class="text-[8.5px] font-extrabold text-indigo-700 block" id="multiplierTotalNominalText">-</span>
-                        </div>
-                    </div>
-                    <div id="proRewardCard" class="relative bg-white/90 p-2.5 rounded-xl border border-purple-200 text-center shadow-xs flex flex-col justify-center">
-                        <div id="checkProReward" class="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-emerald-500 text-white items-center justify-center text-[11px] font-black hidden shadow-md animate-bounce">✓</div>
-                        <span class="text-[9px] font-bold text-slate-500 block uppercase tracking-wider">Pro Reward (&gt;= 26 SA)</span>
-                        <span class="text-xs font-black text-emerald-600 block mt-0.5">+ Rp 2.000.000</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-card-mobile rounded-2xl p-3.5 space-y-3 border-t-2 border-t-teal-500">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-teal-500/15 flex items-center justify-center text-teal-600 shadow-sm border border-teal-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">Survival Rate Activation (All Level)</h2>
-                </div>
-                <span class="text-[9px] bg-teal-500/10 text-teal-700 font-bold px-2 py-0.5 rounded-full border border-teal-500/20">Gate: M3 &gt;= 90% | M5 &gt;= 80%</span>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse text-[10px] min-w-[360px]">
-                    <thead>
-                        <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                            <th class="py-2 px-2 rounded-l-lg">Survival Months</th>
-                            <th class="py-2 px-2">Incentive / Surviving Subs</th>
-                            <th class="py-2 px-2 w-16">Aktif / Subs</th>
-                            <th class="py-2 px-2 rounded-r-lg">Total Insentif</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <tr id="survivalM3Row" class="hover:bg-slate-50 transition-colors text-[10px]">
-                            <td class="py-2 px-2 font-bold text-slate-700">
-                                M3 
-                                <span class="block text-[9px] text-teal-600 font-semibold" id="m3StatusLabel">Gate: &gt;= 90% (Off)</span>
-                            </td>
-                            <td class="py-2 px-2 text-slate-500 font-medium">Rp 100.000</td>
-                            <td class="py-2 px-2">
-                                <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="0" id="survivalM3Subs" oninput="calculateAll()" 
-                                    class="w-14 px-1.5 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner" placeholder="Subs">
-                            </td>
-                            <td class="py-2 px-2 text-teal-600 font-bold" id="survivalM3Total">Rp 0</td>
-                        </tr>
-                        <tr id="survivalM5Row" class="hover:bg-slate-50 transition-colors text-[10px]">
-                            <td class="py-2 px-2 font-bold text-slate-700">
-                                M5 
-                                <span class="block text-[9px] text-teal-600 font-semibold" id="m5StatusLabel">Gate: &gt;= 80% (Off)</span>
-                            </td>
-                            <td class="py-2 px-2 text-slate-500 font-medium">Rp 80.000</td>
-                            <td class="py-2 px-2">
-                                <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="0" id="survivalM5Subs" oninput="calculateAll()" 
-                                    class="w-14 px-1.5 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner" placeholder="Subs">
-                            </td>
-                            <td class="py-2 px-2 text-teal-600 font-bold" id="survivalM5Total">Rp 0</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                            <td colspan="3" class="py-2 px-2 text-right">Subtotal Survival Incentive:</td>
-                            <td class="py-2 px-2 text-teal-600 font-black rounded-r-lg" id="survivalTotalIncentive">Rp 0</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <div class="bg-teal-50/70 border border-teal-200 rounded-xl p-2.5 space-y-2 text-[11px]">
-                <span class="font-extrabold text-teal-900 block">Evaluasi Gate Rate Survival:</span>
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[9px] font-bold text-slate-600 block mb-1">Persentase M3 (Target &gt;= 90%):</label>
-                        <div class="flex items-center gap-1">
-                            <input type="number" step="0.1" min="0" max="100" value="100" id="survivalM3Rate" oninput="calculateAll()" 
-                                class="w-full px-2 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner">
-                            <span class="font-bold text-slate-700">%</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-[9px] font-bold text-slate-600 block mb-1">Persentase M5 (Target &gt;= 80%):</label>
-                        <div class="flex items-center gap-1">
-                            <input type="number" step="0.1" min="0" max="100" value="100" id="survivalM5Rate" oninput="calculateAll()" 
-                                class="w-full px-2 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner">
-                            <span class="font-bold text-slate-700">%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="quarterlyBonusCardContainer" class="glass-card-mobile rounded-2xl p-3.5 space-y-3 border-t-2 border-t-amber-500">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-amber-500/15 flex items-center justify-center text-amber-600 shadow-sm border border-amber-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-1.982-3.172M9.497 14.25a7.454 7.454 0 011.982-3.172M12 10.5v-6m0 0h-2.25M12 4.5h2.25" /></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">Quarterly Bonus</h2>
-                </div>
-                <span class="text-[9px] bg-amber-500/10 text-amber-700 font-bold px-2 py-0.5 rounded-full border border-amber-500/20">Only for AE PRO &amp; AE ELITE</span>
-            </div>
-
-            <div id="quarterlyLockedNotice" class="hidden text-center py-4 text-slate-400 text-[11px] font-semibold italic">
-                Menu ini khusus untuk level AE Pro &amp; AE Elite. Level OJT tidak memenuhi syarat Quarterly Bonus.
-            </div>
-
-            <div id="quarterlyActiveContent" class="space-y-3">
-                <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-2.5 space-y-2 text-[11px]">
-                    <span class="font-extrabold text-amber-900 block">Input Kinerja Kuartalan:</span>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-600 block mb-1">Non OJT Productivity (SA):</label>
-                            <input type="number" min="0" value="0" id="quarterlyProductivity" oninput="calculateAll()" 
-                                class="w-full px-2 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner" placeholder="Total SA">
-                        </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-600 block mb-1">M3 Survival Rate (Target &gt;= 90%):</label>
-                            <div class="flex items-center gap-1">
-                                <input type="number" step="0.1" min="0" max="100" value="100" id="quarterlyM3Rate" oninput="calculateAll()" 
-                                    class="w-full px-2 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner">
-                                <span class="font-bold text-slate-700">%</span>
+                        <div class="menu-info">
+                            <h3>Account Executive</h3>
+                            <div class="badge-container">
+                                <span class="ae-badge ojt"><i class="fa-solid fa-seedling"></i> OJT</span>
+                                <span class="ae-badge pro"><i class="fa-solid fa-bolt"></i> PRO</span>
+                                <span class="ae-badge elite"><i class="fa-solid fa-crown"></i> ELITE</span>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </a>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-[10px] min-w-[360px]">
-                        <thead>
-                            <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                                <th class="py-2 px-2 rounded-l-lg">Non OJT Productivity</th>
-                                <th class="py-2 px-2">M3 Survival</th>
-                                <th class="py-2 px-2">Amount</th>
-                                <th class="py-2 px-2 rounded-r-lg">Add. Bonus</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr id="qRow0" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 15 and &lt; 30</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">90%</td>
-                                <td class="py-2 px-2 font-medium text-slate-500">-</td>
-                                <td class="py-2 px-2 font-medium text-slate-500">-</td>
-                            </tr>
-                            <tr id="qRow1" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 30 and &lt; 45</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">90%</td>
-                                <td class="py-2 px-2 font-bold text-amber-700">Rp 2.000.000</td>
-                                <td class="py-2 px-2 font-medium text-slate-500">-</td>
-                            </tr>
-                            <tr id="qRow2" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 45 and &lt; 60</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">90%</td>
-                                <td class="py-2 px-2 font-bold text-amber-700">Rp 15.000.000</td>
-                                <td class="py-2 px-2 font-medium text-slate-500">-</td>
-                            </tr>
-                            <tr id="qRow3" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 60</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">90%</td>
-                                <td class="py-2 px-2 font-bold text-amber-700">Rp 20.000.000</td>
-                                <td class="py-2 px-2 font-bold text-amber-600">+ Rp 10.000 / SA</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                                <td colspan="2" class="py-2 px-2 text-right">Total Quarterly Bonus:</td>
-                                <td colspan="2" class="py-2 px-2 text-amber-600 font-black text-right" id="quarterlyTotalIncentive">Rp 0</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div id="netAddCardContainer" class="glass-card-mobile rounded-2xl p-3.5 space-y-3 border-t-2 border-t-cyan-500">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-cyan-500/15 flex items-center justify-center text-cyan-600 shadow-sm border border-cyan-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">Net Add Incentive</h2>
-                </div>
-                <span class="text-[9px] bg-cyan-500/10 text-cyan-700 font-bold px-2 py-0.5 rounded-full border border-cyan-500/20">Only for AE PRO &amp; AE ELITE</span>
-            </div>
-
-            <div id="netAddLockedNotice" class="hidden text-center py-4 text-slate-400 text-[11px] font-semibold italic">
-                Menu ini khusus untuk level AE Pro &amp; AE Elite. Level OJT tidak memenuhi syarat Net Add Incentive.
-            </div>
-
-            <div id="netAddActiveContent" class="space-y-3">
-                <div class="bg-cyan-50/70 border border-cyan-200 rounded-xl p-2.5 space-y-2 text-[11px]">
-                    <span class="font-extrabold text-cyan-900 block">Input Net Add Performance:</span>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-600 block mb-1">Active Subs End of Prev Quarter:</label>
-                            <input type="number" min="0" value="0" id="netAddActiveSubsPrev" oninput="calculateAll()" 
-                                class="w-full px-2 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner" placeholder="Jumlah Subs">
+                    <!-- Menu Kanan: Supervisor (Dengan Logo Kunci) -->
+                    <a href="https://systemsalesbandung.github.io/schemaSPV/" class="menu-card supervisor">
+                        <div class="menu-icon">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <div class="lock-badge">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-[9px] font-bold text-slate-600 block mb-1">Incremental Net Add SA (Max 10):</label>
-                            <input type="number" min="0" max="10" value="0" id="netAddIncrementalSA" oninput="calculateAll()" 
-                                class="w-full px-2 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner" placeholder="Max 10 SA">
+                        <div class="menu-info">
+                            <h3>Supervisor</h3>
+                            <div class="spv-desc">
+                                <i class="fa-solid fa-chart-line"></i> Schema SPV Jabar 1
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
+            </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-[10px] min-w-[360px]">
-                        <thead>
-                            <tr class="text-slate-500 uppercase tracking-wider border-b border-slate-200 font-bold">
-                                <th class="py-2 px-2 rounded-l-lg">Active Subs End of Previous Quarter</th>
-                                <th class="py-2 px-2">Incentive / net add</th>
-                                <th class="py-2 px-2 rounded-r-lg">Total Insentif</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr id="netAddRow0" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 80 and &lt; 100</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">Rp 50.000</td>
-                                <td class="py-2 px-2 font-bold text-cyan-700" id="netAddTot0">Rp 0</td>
-                            </tr>
-                            <tr id="netAddRow1" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 100 and &lt; 200</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">Rp 100.000</td>
-                                <td class="py-2 px-2 font-bold text-cyan-700" id="netAddTot1">Rp 0</td>
-                            </tr>
-                            <tr id="netAddRow2" class="hover:bg-slate-50 transition-colors text-[10px]">
-                                <td class="py-2 px-2 font-semibold text-slate-700">&gt;= 200</td>
-                                <td class="py-2 px-2 font-medium text-slate-600">Rp 150.000</td>
-                                <td class="py-2 px-2 font-bold text-cyan-700" id="netAddTot2">Rp 0</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr class="font-bold text-slate-700 border-t border-slate-200 text-[10px] bg-slate-50/50">
-                                <td colspan="2" class="py-2 px-2 text-right">Total Net Add Incentive:</td>
-                                <td class="py-2 px-2 text-cyan-600 font-black rounded-r-lg" id="netAddTotalIncentive">Rp 0</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <div class="footer-info">
+                <p>&copy; 2026 Jabar1 System Insentif Schema</p>
             </div>
         </div>
-
-        <div class="glass-card-mobile rounded-2xl p-4 space-y-3 border-t-2 border-t-emerald-500">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-emerald-500/15 flex items-center justify-center text-emerald-600 shadow-sm border border-emerald-500/20">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.25 2.25 0 0115 23.25a2.25 2.25 0 01-1.58-.66l-5.83-5.83a4.5 4.5 0 116.36-6.36z"/></svg>
-                    </div>
-                    <h2 class="font-extrabold text-slate-800 text-xs">Rincian Akhir &amp; THP</h2>
-                </div>
-                <span class="text-[9px] bg-emerald-500/10 text-emerald-700 font-bold px-2 py-0.5 rounded-full border border-emerald-500/20">Summary</span>
-            </div>
-
-            <div class="space-y-1.5 text-[11px]">
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">Gaji Pokok:</span>
-                    <span class="font-bold text-slate-800" id="sumBaseSalary">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">FTTH Product Mix:</span>
-                    <span class="font-bold text-slate-800" id="sumProductMix">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">FWA Monthly:</span>
-                    <span class="font-bold text-slate-800" id="sumSpecialFWA">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">Insentif PXGY (Acquisition):</span>
-                    <span class="font-bold text-slate-800" id="sumPXGYAcq">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">Insentif PXGY (Special):</span>
-                    <span class="font-bold text-slate-800" id="sumPXGYSpc">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">Survival Rate Incentive (M3 &amp; M5):</span>
-                    <span class="font-bold text-teal-600" id="sumSurvivalIncentive">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100" id="sumNetAddRow">
-                    <span class="text-cyan-600 font-extrabold">Net Add Incentive:</span>
-                    <span class="font-bold text-cyan-600" id="sumNetAddBonus">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100" id="sumQuarterlyRow">
-                    <span class="text-amber-600 font-extrabold">Quarterly Bonus:</span>
-                    <span class="font-bold text-amber-600" id="sumQuarterlyBonus">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100">
-                    <span class="text-slate-500">Productivity Incentive (Progressive):</span>
-                    <span class="font-bold text-slate-800" id="sumProdIncentive">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100" id="sumExtraRow">
-                    <span class="text-slate-500" id="sumExtraTitle">Bonus Tambahan:</span>
-                    <span class="font-bold text-slate-800" id="sumExtraVal">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-1 border-b border-slate-100 hidden" id="proRewardRow">
-                    <span class="text-emerald-600 font-bold">Pro Reward (&gt;= 26 SA):</span>
-                    <span class="font-bold text-emerald-600">+ Rp 2.000.000</span>
-                </div>
-                <div class="flex justify-between py-1.5 font-bold border-b border-slate-200 bg-slate-50/80 px-2 rounded-lg">
-                    <span class="text-slate-700 uppercase tracking-wider text-[10px]">Total Insentif Keseluruhan:</span>
-                    <span class="text-indigo-600" id="sumTotalIncentiveOnly">Rp 0</span>
-                </div>
-                <div class="flex justify-between py-2 text-xs font-black bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/10 px-2.5 rounded-xl border border-emerald-500/30 text-emerald-800 mt-2">
-                    <span class="uppercase tracking-wider">Grand Total (THP Bersih):</span>
-                    <span class="text-emerald-700 text-sm" id="grandTotal">Rp 0</span>
-                </div>
-            </div>
-        </div>
-
     </div>
 
+    <!-- Script PWA untuk Menangani Tombol Install Android / Chrome -->
     <script>
-        const regionalSalaries = {
-            ciamis: { cityName: "Ciamis", tierLabel: "Tiering 1", ojt: 1700000, pro: 2100000, elite: 2373644 },
-			Tasik: { cityName: "Tasik", tierLabel: "Tiering 1", ojt: 1700000, pro: 2100000, elite: 2980336 },
-            garut: { cityName: "Garut", tierLabel: "Tiering 1", ojt: 1700000, pro: 2100000, elite: 2472227 },
-            sumedang: { cityName: "Sumedang", tierLabel: "Tiering 2", ojt: 1900000, pro: 2600000, elite: 3949855 },
-            cianjur: { cityName: "Cianjur", tierLabel: "Tiering 2", ojt: 1900000, pro: 2600000, elite: 3316191 },
-            sukabumi: { cityName: "Sukabumi", tierLabel: "Tiering 2", ojt: 1900000, pro: 2600000, elite: 3831926 },
-            bandung: { cityName: "Bandung", tierLabel: "Tiering 3", ojt: 2500000, pro: 3600000, elite: 4737670 }
-        };
+        let deferredPrompt;
+        const installContainer = document.getElementById('install-container');
+        const installBtn = document.getElementById('installBtn');
 
-        const standardTablesConfig = {
-            ftthProducts: [
-                { label: "0 - 228.999", incentive: 0, sa: 0 },
-                { label: "229.000 - 299.999", incentive: 50000, sa: 0 },
-                { label: "300.000 - 399.999", incentive: 100000, sa: 0 },
-                { label: "400.000 - 599.999", incentive: 125000, sa: 0 },
-                { label: "600.000+", incentive: 200000, sa: 0 }
-            ],
-            fwaProducts: [
-                { label: ">= 219", incentive: 50000, sa: 0 }
-            ],
-            pxgyProducts: [
-                { label: "3-5 months", acqIncentive: 125000, specialIncentive: 125000, sa: 0 },
-                { label: ">= 6 months", acqIncentive: 150000, specialIncentive: 150000, sa: 0 }
-            ],
-            productivityTiersOjt: [
-                { label: "1 – 2", incentivePerSA: 80000, bonusText: "-" },
-                { label: "3 – 4", incentivePerSA: 100000, bonusText: "Rp 325.000" },
-                { label: "5 – 6", incentivePerSA: 130000, bonusText: "-" },
-                { label: "7 – 9", incentivePerSA: 150000, bonusText: "Rp 600.000" },
-                { label: ">= 10", incentivePerSA: 200000, bonusText: "-" }
-            ],
-            productivityTiersProElite: [
-                { label: "1 – 6", incentivePerSA: 80000, multiplier: "0" },
-                { label: "7 – 9", incentivePerSA: 150000, multiplier: "1.5" },
-                { label: "10 – 13", incentivePerSA: 175000, multiplier: "2.0" },
-                { label: "14 – 29", incentivePerSA: 200000, multiplier: "4.00" },
-                { label: "30 – 39", incentivePerSA: 225000, multiplier: "4.25" },
-                { label: "40 – 49", incentivePerSA: 250000, multiplier: "4.50" },
-                { label: ">= 50", incentivePerSA: 275000, multiplier: "4.65" }
-            ]
-        };
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Mencegah Chrome menampilkan banner otomatis bawaan
+            e.preventDefault();
+            deferredPrompt = e;
+            // Tampilkan tombol instal kustom kita
+            installContainer.style.display = 'block';
+        });
 
-        let currentCityKey = 'bandung';
-        let currentTierKey = 'elite';
-
-        window.onload = function() {
-            document.getElementById('citySelect').value = currentCityKey;
-            updateCityBadgeAndSalaries(currentCityKey);
-            setTier(currentTierKey);
-        };
-
-        function formatRupiah(number) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(number);
-        }
-
-        function triggerPulse(el) {
-            el.classList.add('click-pulse');
-            setTimeout(() => el.classList.remove('click-pulse'), 200);
-        }
-
-        function onCityDropdownChange(val) {
-            currentCityKey = val;
-            updateCityBadgeAndSalaries(val);
-            calculateAll();
-        }
-
-        function updateCityBadgeAndSalaries(cityKey) {
-            const data = regionalSalaries[cityKey];
-            if (!data) return;
-
-            document.getElementById('labelSalaryOjt').innerText = formatRupiah(data.ojt);
-            document.getElementById('labelSalaryPro').innerText = formatRupiah(data.pro);
-            document.getElementById('labelSalaryElite').innerText = formatRupiah(data.elite);
-
-            const container = document.getElementById('cityIconContainer');
-            container.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>`;
-        }
-
-        function setTier(tierKey) {
-            currentTierKey = tierKey;
-
-            ['Ojt', 'Pro', 'Elite'].forEach(t => {
-                document.getElementById(`btnTier${t}`).className = "relative py-2.5 px-2 rounded-xl transition-all border border-slate-200 bg-slate-50/50 text-slate-500 hover:bg-slate-100 flex flex-col items-center justify-center gap-1 shadow-xs group";
-                document.getElementById(`check${t}`).classList.add('hidden');
-            });
-
-            const activeBtn = document.getElementById(`btnTier${tierKey.charAt(0).toUpperCase() + tierKey.slice(1)}`);
-            activeBtn.className = "relative py-2.5 px-2 rounded-xl transition-all border-2 border-purple-500 bg-purple-50/90 text-slate-800 shadow-sm flex flex-col items-center justify-center gap-1 group ring-2 ring-purple-500/20";
-            document.getElementById(`check${tierKey.charAt(0).toUpperCase() + tierKey.slice(1)}`).classList.remove('hidden');
-
-            const badge = document.getElementById('headerTierBadge');
-            if (tierKey === 'ojt') badge.innerText = "OJT";
-            else if (tierKey === 'pro') badge.innerText = "AE Pro";
-            else badge.innerText = "AE Elite";
-
-            const quarterlyCard = document.getElementById('quarterlyBonusCardContainer');
-            const lockedNotice = document.getElementById('quarterlyLockedNotice');
-            const activeContent = document.getElementById('quarterlyActiveContent');
-            const sumQuarterlyRow = document.getElementById('sumQuarterlyRow');
-
-            const netAddCard = document.getElementById('netAddCardContainer');
-            const netAddLockedNotice = document.getElementById('netAddLockedNotice');
-            const netAddActiveContent = document.getElementById('netAddActiveContent');
-            const sumNetAddRow = document.getElementById('sumNetAddRow');
-
-            if (tierKey === 'ojt') {
-                quarterlyCard.classList.add('opacity-75');
-                lockedNotice.classList.remove('hidden');
-                activeContent.classList.add('hidden');
-                sumQuarterlyRow.classList.add('hidden');
-
-                netAddCard.classList.add('opacity-75');
-                netAddLockedNotice.classList.remove('hidden');
-                netAddActiveContent.classList.add('hidden');
-                sumNetAddRow.classList.add('hidden');
-            } else {
-                quarterlyCard.classList.remove('opacity-75');
-                lockedNotice.classList.add('hidden');
-                activeContent.classList.remove('hidden');
-                sumQuarterlyRow.classList.remove('hidden');
-
-                netAddCard.classList.remove('opacity-75');
-                netAddLockedNotice.classList.add('hidden');
-                netAddActiveContent.classList.remove('hidden');
-                sumNetAddRow.classList.remove('hidden');
-            }
-
-            renderTables();
-            calculateAll();
-        }
-
-        function renderTables() {
-            if (currentTierKey === 'ojt') {
-                document.getElementById('sec2Title').innerText = 'Productivity & Lump Sum Bonus';
-                document.getElementById('tableHeaderCol5').innerText = 'Lump Sum';
-            } else {
-                document.getElementById('sec2Title').innerText = 'Productivity & Multiplier Tier';
-                document.getElementById('tableHeaderCol5').innerText = 'Multi';
-            }
-
-            let ftthHtml = '';
-            standardTablesConfig.ftthProducts.forEach((p, idx) => {
-                ftthHtml += `
-                    <tr class="hover:bg-slate-50 transition-colors text-[10px]">
-                        <td class="py-1.5 px-2 font-semibold text-slate-700">${p.label}</td>
-                        <td class="py-1.5 px-2 text-slate-500 font-medium">${formatRupiah(p.incentive)}</td>
-                        <td class="py-1.5 px-2">
-                            <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="${p.sa}" data-type="ftth" data-index="${idx}" oninput="updateSA(this)" class="w-12 px-1.5 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner">
-                        </td>
-                        <td class="py-1.5 px-2 text-indigo-600 font-bold" id="ftth-ins-${idx}">Rp 0</td>
-                    </tr>
-                `;
-            });
-            document.getElementById('ftthTableBody').innerHTML = ftthHtml;
-
-            let fwaHtml = '';
-            standardTablesConfig.fwaProducts.forEach((p, idx) => {
-                fwaHtml += `
-                    <tr class="hover:bg-slate-50 transition-colors text-[10px]">
-                        <td class="py-1.5 px-2 font-semibold text-slate-700">${p.label}</td>
-                        <td class="py-1.5 px-2 text-slate-500 font-medium">${formatRupiah(p.incentive)}</td>
-                        <td class="py-1.5 px-2">
-                            <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="${p.sa}" data-type="fwa" data-index="${idx}" oninput="updateSA(this)" class="w-12 px-1.5 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner">
-                        </td>
-                        <td class="py-1.5 px-2 text-pink-600 font-bold" id="fwa-ins-${idx}">Rp 0</td>
-                    </tr>
-                `;
-            });
-            document.getElementById('fwaTableBody').innerHTML = fwaHtml;
-
-            let pxgyHtml = '';
-            standardTablesConfig.pxgyProducts.forEach((p, idx) => {
-                pxgyHtml += `
-                    <tr class="hover:bg-slate-50 transition-colors text-[10px]">
-                        <td class="py-1.5 px-2 font-semibold text-slate-700">${p.label}</td>
-                        <td class="py-1.5 px-2 text-slate-500 font-medium">${formatRupiah(p.acqIncentive)}</td>
-                        <td class="py-1.5 px-2 text-slate-500 font-medium">${formatRupiah(p.specialIncentive)}</td>
-                        <td class="py-1.5 px-2">
-                            <input type="number" pattern="[0-9]*" inputmode="numeric" min="0" value="${p.sa}" data-type="pxgy" data-index="${idx}" oninput="updateSA(this)" class="w-10 px-1.5 py-1 glass-input rounded-lg text-center font-bold text-slate-800 shadow-inner">
-                        </td>
-                        <td class="py-1.5 px-2 text-purple-600 font-bold" id="pxgy-acq-ins-${idx}">Rp 0</td>
-                        <td class="py-1.5 px-2 text-purple-600 font-bold" id="pxgy-spc-ins-${idx}">Rp 0</td>
-                    </tr>
-                `;
-            });
-            document.getElementById('pxgyTableBody').innerHTML = pxgyHtml;
-
-            let prodHtml = '';
-            const activeProdTiers = currentTierKey === 'ojt' ? standardTablesConfig.productivityTiersOjt : standardTablesConfig.productivityTiersProElite;
-            activeProdTiers.forEach((t, idx) => {
-                let col5Text = currentTierKey === 'ojt' ? t.bonusText : `${t.multiplier}`;
-                prodHtml += `
-                    <tr id="prod-row-${idx}" class="hover:bg-slate-50 transition-colors text-[10px]">
-                        <td class="py-1.5 px-2 font-semibold text-slate-700">${t.label}</td>
-                        <td class="py-1.5 px-2 text-slate-500 font-medium">${formatRupiah(t.incentivePerSA)}</td>
-                        <td class="py-1.5 px-2 font-bold text-slate-800" id="prod-sa-${idx}">0</td>
-                        <td class="py-1.5 px-2 text-purple-600 font-bold" id="prod-ins-${idx}">Rp 0</td>
-                        <td class="py-1.5 px-2 font-bold text-purple-700" id="prod-multi-${idx}">${col5Text}</td>
-                    </tr>
-                `;
-            });
-            document.getElementById('productivityTableBody').innerHTML = prodHtml;
-        }
-
-        function updateSA(inputEl) {
-            const type = inputEl.getAttribute('data-type');
-            const index = parseInt(inputEl.getAttribute('data-index'));
-            const val = parseInt(inputEl.value) || 0;
-
-            if (type === 'ftth') standardTablesConfig.ftthProducts[index].sa = val;
-            else if (type === 'fwa') standardTablesConfig.fwaProducts[index].sa = val;
-            else if (type === 'pxgy') standardTablesConfig.pxgyProducts[index].sa = val;
-
-            calculateAll();
-        }
-
-        function calculateAll() {
-            let baseSalaryVal = 0;
-            if (currentCityKey && regionalSalaries[currentCityKey]) {
-                baseSalaryVal = regionalSalaries[currentCityKey][currentTierKey];
-            }
-
-            let totalFTTH_SA = 0;
-            let totalFTTH_Incentive = 0;
-            standardTablesConfig.ftthProducts.forEach((p, idx) => {
-                const actIns = p.incentive * p.sa;
-                totalFTTH_SA += p.sa;
-                totalFTTH_Incentive += actIns;
-                document.getElementById(`ftth-ins-${idx}`).innerText = formatRupiah(actIns);
-            });
-            document.getElementById('ftthTotalSA').innerText = totalFTTH_SA;
-            document.getElementById('ftthTotalIncentive').innerText = formatRupiah(totalFTTH_Incentive);
-
-            let totalFWA_SA = 0;
-            let totalFWA_Incentive = 0;
-            standardTablesConfig.fwaProducts.forEach((p, idx) => {
-                const fwaIns = p.incentive * p.sa;
-                totalFWA_SA += p.sa;
-                totalFWA_Incentive += fwaIns;
-                document.getElementById(`fwa-ins-${idx}`).innerText = formatRupiah(fwaIns);
-            });
-            document.getElementById('fwaTotalSA').innerText = totalFWA_SA;
-            document.getElementById('fwaTotalIncentive').innerText = formatRupiah(totalFWA_Incentive);
-
-            let totalPXGY_SA = 0;
-            let totalPXGY_Acq_Incentive = 0;
-            let totalPXGY_Special_Incentive = 0;
-            standardTablesConfig.pxgyProducts.forEach((p, idx) => {
-                const acqIns = p.acqIncentive * p.sa;
-                const specialIns = p.specialIncentive * p.sa;
-                totalPXGY_SA += p.sa;
-                totalPXGY_Acq_Incentive += acqIns;
-                totalPXGY_Special_Incentive += specialIns;
-                document.getElementById(`pxgy-acq-ins-${idx}`).innerText = formatRupiah(acqIns);
-                document.getElementById(`pxgy-spc-ins-${idx}`).innerText = formatRupiah(specialIns);
-            });
-            document.getElementById('pxgyTotalSA').innerText = totalPXGY_SA;
-            document.getElementById('pxgyTotalAcqIncentive').innerText = formatRupiah(totalPXGY_Acq_Incentive);
-            document.getElementById('pxgyTotalSpecialIncentive').innerText = formatRupiah(totalPXGY_Special_Incentive);
-
-            // SURVIVAL RATE ACTIVATION + STABILO COLOR
-            let survivalM3Subs = parseInt(document.getElementById('survivalM3Subs').value) || 0;
-            let survivalM5Subs = parseInt(document.getElementById('survivalM5Subs').value) || 0;
-            let survivalM3Rate = parseFloat(document.getElementById('survivalM3Rate').value) || 0;
-            let survivalM5Rate = parseFloat(document.getElementById('survivalM5Rate').value) || 0;
-
-            const m3Row = document.getElementById('survivalM3Row');
-            const m5Row = document.getElementById('survivalM5Row');
-            m3Row.className = "hover:bg-slate-50 transition-colors text-[10px]";
-            m5Row.className = "hover:bg-slate-50 transition-colors text-[10px]";
-
-            let survivalM3Ins = 0;
-            const m3Label = document.getElementById('m3StatusLabel');
-            if (survivalM3Rate >= 90) {
-                survivalM3Ins = survivalM3Subs * 100000;
-                m3Label.innerText = "Gate: >= 90% (Pass)";
-                m3Label.className = "block text-[9px] text-emerald-600 font-bold";
-                if(survivalM3Subs > 0) m3Row.className = "stabilo-green-cell text-[10px]";
-            } else {
-                m3Label.innerText = "Gate: >= 90% (Gagal)";
-                m3Label.className = "block text-[9px] text-rose-500 font-bold";
-            }
-            document.getElementById('survivalM3Total').innerText = formatRupiah(survivalM3Ins);
-
-            let survivalM5Ins = 0;
-            const m5Label = document.getElementById('m5StatusLabel');
-            if (survivalM5Rate >= 80) {
-                survivalM5Ins = survivalM5Subs * 80000;
-                m5Label.innerText = "Gate: >= 80% (Pass)";
-                m5Label.className = "block text-[9px] text-emerald-600 font-bold";
-                if(survivalM5Subs > 0) m5Row.className = "stabilo-green-cell text-[10px]";
-            } else {
-                m5Label.innerText = "Gate: >= 80% (Gagal)";
-                m5Label.className = "block text-[9px] text-rose-500 font-bold";
-            }
-            document.getElementById('survivalM5Total').innerText = formatRupiah(survivalM5Ins);
-
-            let totalSurvivalIncentiveVal = survivalM3Ins + survivalM5Ins;
-            document.getElementById('survivalTotalIncentive').innerText = formatRupiah(totalSurvivalIncentiveVal);
-
-            // NET ADD INCENTIVE + STABILO COLOR
-            let netAddBonusVal = 0;
-            for(let i=0; i<=2; i++) {
-                const nr = document.getElementById(`netAddRow${i}`);
-                if(nr) nr.className = "hover:bg-slate-50 transition-colors text-[10px]";
-                document.getElementById(`netAddTot${i}`).innerText = formatRupiah(0);
-            }
-
-            if (currentTierKey !== 'ojt') {
-                let prevSubs = parseInt(document.getElementById('netAddActiveSubsPrev').value) || 0;
-                let incSA = parseInt(document.getElementById('netAddIncrementalSA').value) || 0;
-                if (incSA > 10) incSA = 10; // Capping maximum 10 SA incremental
-
-                let ratePerSA = 0;
-                let activeRowIndex = -1;
-
-                if (prevSubs >= 200) {
-                    ratePerSA = 150000;
-                    activeRowIndex = 2;
-                } else if (prevSubs >= 100 && prevSubs < 200) {
-                    ratePerSA = 100000;
-                    activeRowIndex = 1;
-                } else if (prevSubs >= 80 && prevSubs < 100) {
-                    ratePerSA = 50000;
-                    activeRowIndex = 0;
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('Pengguna menyetujui instalasi aplikasi');
                 }
-
-                if (activeRowIndex !== -1 && incSA > 0) {
-                    netAddBonusVal = incSA * ratePerSA;
-                    document.getElementById(`netAddTot${activeRowIndex}`).innerText = formatRupiah(netAddBonusVal);
-                    const activeNetRow = document.getElementById(`netAddRow${activeRowIndex}`);
-                    if(activeNetRow) activeNetRow.className = "stabilo-green-cell text-[10px]";
-                }
+                deferredPrompt = null;
+                installContainer.style.display = 'none';
             }
-            document.getElementById('netAddTotalIncentive').innerText = formatRupiah(netAddBonusVal);
-            document.getElementById('sumNetAddBonus').innerText = formatRupiah(netAddBonusVal);
+        });
 
-            // QUARTERLY BONUS + STABILO COLOR
-            let quarterlyBonusVal = 0;
-            for (let i = 0; i <= 3; i++) {
-                const r = document.getElementById(`qRow${i}`);
-                if (r) r.className = "hover:bg-slate-50 transition-colors text-[10px]";
-            }
+        window.addEventListener('appinstalled', () => {
+            installContainer.style.display = 'none';
+            console.log('Aplikasi berhasil diinstal');
+        });
 
-            if (currentTierKey !== 'ojt') {
-                let qProd = parseInt(document.getElementById('quarterlyProductivity').value) || 0;
-                let qRate = parseFloat(document.getElementById('quarterlyM3Rate').value) || 0;
-
-                if (qRate >= 90) {
-                    if (qProd >= 60) {
-                        quarterlyBonusVal = 20000000 + ((qProd - 60) * 10000);
-                        const r = document.getElementById('qRow3');
-                        if(r) r.className = "stabilo-green-cell text-[10px]";
-                    } else if (qProd >= 45) {
-                        quarterlyBonusVal = 15000000;
-                        const r = document.getElementById('qRow2');
-                        if(r) r.className = "stabilo-green-cell text-[10px]";
-                    } else if (qProd >= 30) {
-                        quarterlyBonusVal = 2000000;
-                        const r = document.getElementById('qRow1');
-                        if(r) r.className = "stabilo-green-cell text-[10px]";
-                    } else if (qProd >= 15) {
-                        quarterlyBonusVal = 0;
-                        const r = document.getElementById('qRow0');
-                        if(r) r.className = "stabilo-green-cell text-[10px]";
-                    }
-                }
-            }
-            document.getElementById('quarterlyTotalIncentive').innerText = formatRupiah(quarterlyBonusVal);
-            document.getElementById('sumQuarterlyBonus').innerText = formatRupiah(quarterlyBonusVal);
-
-            let combinedTotalClosingSA = totalFTTH_SA + totalFWA_SA + totalPXGY_SA;
-            document.getElementById('combinedTotalClosingSA').innerText = combinedTotalClosingSA + " SA";
-
-            let remainingSA = combinedTotalClosingSA;
-            let prodTotalSAVal = 0;
-            let prodTotalInsentifVal = 0;
-            let tierAllocations = [];
-
-            const activeProdTiers = currentTierKey === 'ojt' ? standardTablesConfig.productivityTiersOjt : standardTablesConfig.productivityTiersProElite;
-
-            if (currentTierKey === 'ojt') {
-                let limits = [2, 2, 2, 3, Infinity];
-                activeProdTiers.forEach((t, idx) => {
-                    let allocated = Math.min(Math.max(remainingSA, 0), limits[idx]);
-                    tierAllocations.push(allocated);
-                    remainingSA -= allocated;
-                });
-            } else {
-                let limits = [6, 3, 4, 16, 10, 10, Infinity];
-                activeProdTiers.forEach((t, idx) => {
-                    let allocated = Math.min(Math.max(remainingSA, 0), limits[idx]);
-                    tierAllocations.push(allocated);
-                    remainingSA -= allocated;
-                });
-            }
-
-            activeProdTiers.forEach((t, idx) => {
-                let saTier = tierAllocations[idx];
-                let insTier = saTier * t.incentivePerSA;
-                prodTotalSAVal += saTier;
-                prodTotalInsentifVal += insTier;
-
-                document.getElementById(`prod-sa-${idx}`).innerText = saTier;
-                document.getElementById(`prod-ins-${idx}`).innerText = formatRupiah(insTier);
+        // Registrasi Service Worker Sederhana agar memenuhi syarat PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;base64,').catch(err => console.log(err));
             });
-
-            document.getElementById('prodTotalSA').innerText = prodTotalSAVal;
-            document.getElementById('prodTotalInsentif').innerText = formatRupiah(prodTotalInsentifVal);
-
-            activeProdTiers.forEach((t, idx) => {
-                const rowEl = document.getElementById(`prod-row-${idx}`);
-                if (rowEl) {
-                    rowEl.classList.remove('stabilo-green-cell');
-                }
-            });
-
-            let sumProdMix = totalFTTH_Incentive;
-            let sumProdIncentive = prodTotalInsentifVal;
-            let sumSpecialFWA = totalFWA_Incentive;
-            let sumPXGYAcq = totalPXGY_Acq_Incentive;
-            let sumPXGYSpc = totalPXGY_Special_Incentive;
-            let totalIncentiveOnly = 0;
-
-            let baseAccumulatedForMultiplier = sumProdMix + sumSpecialFWA + sumPXGYAcq;
-            let proRewardVal = 0;
-            const proRewardRowEl = document.getElementById('proRewardRow');
-            if (currentTierKey === 'pro' && combinedTotalClosingSA >= 26) {
-                proRewardVal = 2000000;
-                proRewardRowEl.classList.remove('hidden');
-                document.getElementById('checkProReward').classList.remove('hidden');
-                document.getElementById('proRewardCard').className = "relative bg-emerald-50/90 p-2.5 rounded-xl border border-emerald-300 text-center shadow-xs flex flex-col justify-center ring-1 ring-emerald-400";
-            } else {
-                proRewardRowEl.classList.add('hidden');
-                document.getElementById('checkProReward').classList.add('hidden');
-                document.getElementById('proRewardCard').className = "relative bg-white/90 p-2.5 rounded-xl border border-purple-200 text-center shadow-xs flex flex-col justify-center";
-            }
-
-            const ojtNoticeEl = document.getElementById('ojtLumpSumNotice');
-            const proEliteNoticeEl = document.getElementById('proEliteNotice');
-
-            if (currentTierKey === 'ojt') {
-                ojtNoticeEl.classList.remove('hidden');
-                proEliteNoticeEl.classList.add('hidden');
-
-                let lumpSum = 0;
-                const card3 = document.getElementById('lumpSumCard3');
-                const card7 = document.getElementById('lumpSumCard7');
-                const check3 = document.getElementById('checkLumpSum3');
-                const check7 = document.getElementById('checkLumpSum7');
-
-                if (combinedTotalClosingSA >= 7) {
-                    lumpSum = 600000;
-                    card3.className = "relative bg-white/90 p-2.5 rounded-lg border border-slate-200 text-center shadow-xs transition-all";
-                    check3.classList.add('hidden');
-                    card7.className = "relative bg-emerald-50/90 p-2.5 rounded-lg border border-emerald-300 text-center shadow-xs transition-all";
-                    check7.classList.remove('hidden');
-                } else if (combinedTotalClosingSA >= 3) {
-                    lumpSum = 325000;
-                    card3.className = "relative bg-emerald-50/90 p-2.5 rounded-lg border border-emerald-300 text-center shadow-xs transition-all";
-                    check3.classList.remove('hidden');
-                    card7.className = "relative bg-white/90 p-2.5 rounded-lg border border-slate-200 text-center shadow-xs transition-all";
-                    check7.classList.add('hidden');
-                } else {
-                    card3.className = "relative bg-white/90 p-2.5 rounded-lg border border-slate-200 text-center shadow-xs transition-all";
-                    check3.classList.add('hidden');
-                    card7.className = "relative bg-white/90 p-2.5 rounded-lg border border-slate-200 text-center shadow-xs transition-all";
-                    check7.classList.add('hidden');
-                }
-
-                document.getElementById('sumExtraTitle').innerText = 'Bonus Tambahan (Lump Sum):';
-                document.getElementById('sumExtraVal').innerText = formatRupiah(lumpSum);
-
-                totalIncentiveOnly = sumProdMix + sumProdIncentive + lumpSum + sumSpecialFWA + sumPXGYAcq + sumPXGYSpc + totalSurvivalIncentiveVal + netAddBonusVal + quarterlyBonusVal + proRewardVal;
-            } else {
-                ojtNoticeEl.classList.add('hidden');
-                proEliteNoticeEl.classList.remove('hidden');
-
-                let multiplierVal = 0;
-                let activeRowIdx = -1;
-                let tierNameText = "-";
-
-                if (prodTotalSAVal >= 50) {
-                    multiplierVal = 4.65;
-                    activeRowIdx = 6;
-                    tierNameText = `${prodTotalSAVal} SA (>= 50)`;
-                } else if (prodTotalSAVal >= 40) {
-                    multiplierVal = 4.50;
-                    activeRowIdx = 5;
-                    tierNameText = `${prodTotalSAVal} SA (40 - 49)`;
-                } else if (prodTotalSAVal >= 30) {
-                    multiplierVal = 4.25;
-                    activeRowIdx = 4;
-                    tierNameText = `${prodTotalSAVal} SA (30 – 39)`;
-                } else if (prodTotalSAVal >= 14) {
-                    multiplierVal = 4.00;
-                    activeRowIdx = 3;
-                    tierNameText = `${prodTotalSAVal} SA (14 – 29)`;
-                } else if (prodTotalSAVal >= 10) {
-                    multiplierVal = 2.0;
-                    activeRowIdx = 2;
-                    tierNameText = `${prodTotalSAVal} SA (10 – 13)`;
-                } else if (prodTotalSAVal >= 7) {
-                    multiplierVal = 1.5;
-                    activeRowIdx = 1;
-                    tierNameText = `${prodTotalSAVal} SA (7 – 9)`;
-                } else {
-                    multiplierVal = 0;
-                    activeRowIdx = 0;
-                    tierNameText = `${prodTotalSAVal} SA (1 – 6)`;
-                }
-
-                if (activeRowIdx !== -1) {
-                    const activeRow = document.getElementById(`prod-row-${activeRowIdx}`);
-                    if (activeRow) {
-                        activeRow.classList.add('stabilo-green-cell');
-                    }
-                }
-
-                document.getElementById('multiplierTierNameText').innerText = tierNameText;
-                const badgeCard = document.getElementById('multiplierBadgeCard');
-                const checkBadge = document.getElementById('checkMultiplierBadge');
-                if (prodTotalSAVal >= 7) {
-                    badgeCard.className = "relative bg-emerald-50/90 p-2.5 rounded-xl border border-emerald-300 text-center shadow-xs flex flex-col justify-center ring-1 ring-emerald-400";
-                    checkBadge.classList.remove('hidden');
-                } else {
-                    badgeCard.className = "relative bg-white/90 p-2.5 rounded-xl border border-purple-200 text-center shadow-xs flex flex-col justify-center";
-                    checkBadge.classList.add('hidden');
-                }
-
-                let multiIncentive = baseAccumulatedForMultiplier * multiplierVal;
-                // Merincikan keterangan perhitungan perkalian ke UI
-                document.getElementById('multiplierTotalNominalText').innerText = `( ${formatRupiah(baseAccumulatedForMultiplier)} x ${multiplierVal} ) = ${formatRupiah(multiIncentive)}`;
-                
-                document.getElementById('sumExtraTitle').innerText = `Multiplier Tier (${formatRupiah(baseAccumulatedForMultiplier)} x ${multiplierVal}):`;
-                document.getElementById('sumExtraVal').innerText = formatRupiah(multiIncentive);
-
-                totalIncentiveOnly = sumProdMix + sumProdIncentive + multiIncentive + sumSpecialFWA + sumPXGYAcq + sumPXGYSpc + totalSurvivalIncentiveVal + netAddBonusVal + quarterlyBonusVal + proRewardVal;
-            }
-
-            let grandTotal = baseSalaryVal + totalIncentiveOnly;
-
-            document.getElementById('dashBaseSalary').innerText = formatRupiah(baseSalaryVal);
-            document.getElementById('dashTotalIncentive').innerText = formatRupiah(totalIncentiveOnly);
-            document.getElementById('dashGrandTotal').innerText = formatRupiah(grandTotal);
-
-            document.getElementById('sumBaseSalary').innerText = formatRupiah(baseSalaryVal);
-            document.getElementById('sumProductMix').innerText = formatRupiah(sumProdMix);
-            document.getElementById('sumSpecialFWA').innerText = formatRupiah(sumSpecialFWA);
-            document.getElementById('sumPXGYAcq').innerText = formatRupiah(sumPXGYAcq);
-            document.getElementById('sumPXGYSpc').innerText = formatRupiah(sumPXGYSpc);
-            document.getElementById('sumSurvivalIncentive').innerText = formatRupiah(totalSurvivalIncentiveVal);
-            document.getElementById('sumProdIncentive').innerText = formatRupiah(sumProdIncentive);
-            document.getElementById('sumTotalIncentiveOnly').innerText = formatRupiah(totalIncentiveOnly);
-            document.getElementById('grandTotal').innerText = formatRupiah(grandTotal);
         }
     </script>
 </body>
